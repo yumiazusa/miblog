@@ -55,6 +55,7 @@
     line-height: 60px;
     background: #ffffff;
     overflow: hidden;
+    margin-left: 8px;
   
     & .sidebar-logo-link {
       height: 100%;

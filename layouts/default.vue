@@ -25,14 +25,7 @@
           </div>
         </el-col>
         <el-col :span="3">
-          <div class="grid-content bg-purple login-container">
-            <img
-              class="user-figure"
-              src="http://www.miledoapi.com/upload/images/common/logo.png"
-              alt=""
-            />
-            <el-button class="login-button" size="mini" plain>登录</el-button>
-          </div>
+          <header-right/>
         </el-col>
       </el-row>
     </div>
@@ -59,13 +52,18 @@
         </el-col>
       </el-row>
     </div>
-    <div :style="{ height: tagItems.length?'105px':'65px'}"></div>
+    <div :style="{ height: tagItems.length?'105px':'60px'}"></div>
+    <el-tooltip placement="top" content="回到顶部">
+            <back-to-top :visibility-height="300" :back-position="0" transition-name="fade" /> 
+    </el-tooltip>
     <nuxt />
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
-import Logo from "./components/Logo.vue";
+import Logo from "./components/Logo";
+import HeaderRight from "./components/HeaderRight";
+import BackToTop from "@/components/BackToTop";
 export default {
   data() {
     return {
@@ -77,6 +75,8 @@ export default {
   },
   components: {
     Logo,
+    HeaderRight,
+    BackToTop,
   },
   computed: {
     ...mapState(["typeList"]),
@@ -131,15 +131,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.container {
-  height: 3000px;
-  overflow: hidden;
-}
+// .container {
+//   height: 3000px;
+//   overflow: hidden;
+// }
 .container-header {
+  background-color: #ffffff;
   border-bottom: solid 1px #e6e6e6;
   position: fixed;
   width: 100%;
   top: 0px;
+  z-index: 20;
 }
 .type-tag {
   border-bottom: solid 1px #e6e6e6;
@@ -148,6 +150,7 @@ export default {
   width: 100%;
   top: 61px;
   height: 45px;
+  z-index: 20;
 }
 .tag-list {
   flex-direction: row;
@@ -180,28 +183,5 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.row-bg {
-  padding: 10px 0;
-  background-color: #f9fafc;
-}
-.login-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 60px;
-  line-height: 60px;
-  .user-figure {
-    width: 32px;
-    height: 32px;
-  }
-  .login-button {
-    cursor: pointer;
-    margin-left: 10px;
-    color: #666666;
-    font-size: 15px;
-    font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-    vertical-align: middle;
-  }
 }
 </style>
