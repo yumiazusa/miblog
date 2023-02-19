@@ -4,7 +4,7 @@
             class="box">
             <div class="list">
               <div
-                v-for="(item, index) in articleList"
+                v-for="(item, index) in articleListTemp"
                 class="list-item"
                 :key="index"
               >
@@ -47,13 +47,13 @@
               </div>
             </div>
             <P
-              v-if="loading"
+              v-if="loadingTemp"
               style="margin: 10pxauto; text-align: center"
               class="loading"
             >
               <span></span>
             </P>
-            <p v-if="noMore" style="margin:10px auto;text-align: center;font-size:13px;color:#ccc">没有更多了</P>
+            <p v-if="noMoreTemp" style="margin:10px auto;text-align: center;font-size:13px;color:#ccc">没有更多了</P>
           </div>
         </div>
 </template>
@@ -98,7 +98,10 @@ export default {
   },
   data() {
     return {
-
+      loadingTemp: this.loading,
+      noMoreTemp: this.noMore,
+      articleListTemp:this.articleList,
+      pageTemp:this.page
     }
   },
   mounted(){
@@ -112,29 +115,29 @@ export default {
       ) {
         return;
       }
-      if (this.noMore || this.loading) {
+      if (this.noMoreTemp || this.loadingTemp) {
         return;
       }
-      this.loading = true;
-      this.page += 1;
+      this.loadingTemp = true;
+      this.pageTemp += 1;
       this.$axios({
         url: "/index/articleList",
         params: {
-          page: this.page,
+          page: this.pageTemp,
           limit: this.limit,
           id: this.id,
           type_id: this.typeId,
         },
       }).then((resArticle) => {
         if (resArticle.status === 20000) {
-          if (Math.ceil(resArticle.data.total / this.limit) <= this.page) {
-            this.noMore = true;
+          if (Math.ceil(resArticle.data.total / this.limit) <= this.pageTemp) {
+            this.noMoreTemp = true;
           }
           if (resArticle.data.list.length) {
-            this.articleList = [...this.articleList, ...resArticle.data.list];
+            this.articleListTemp = [...this.articleListTemp, ...resArticle.data.list];
           }
         }
-        this.loading = false;
+        this.loadingTemp = false;
       });
     },
     //滚动条在Y轴上的滚动距离
