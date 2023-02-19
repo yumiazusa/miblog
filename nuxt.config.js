@@ -1,3 +1,11 @@
+/*
+ * @Author: yumiazusa yumiazusa@hotmail.com
+ * @Date: 2023-02-17 13:52:11
+ * @LastEditors: yumiazusa yumiazusa@hotmail.com
+ * @LastEditTime: 2023-02-18 12:50:12
+ * @FilePath: /www/miledo/miblog/nuxt.config.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -52,7 +60,7 @@ export default {
 
   axios:{
     proxy:true,//  开启跨域行为
-    prefix:'/api/testApi',  //配置基本的url地址 
+    prefix:'/api/v1/blogApi',  //配置基本的url地址 
   },
   proxy:{
     '/api':{

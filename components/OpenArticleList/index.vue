@@ -38,6 +38,7 @@ export default {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin-left: 10px;
     .htitle { 
         font-size: 16px; 
         line-height: 40px; 

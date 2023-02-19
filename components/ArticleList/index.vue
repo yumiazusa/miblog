@@ -1,53 +1,61 @@
 <template>
     <div id="box">
-        <div class="box">
-            <div class="list" >
-                <div v-for="(item,index) in articleList" class="list-item" :key="index">
-                    <div class="meta">
-                        <div class="meta-container">
-                            <div class="user-message">
-                                <a class="userbox">
-                                    {{item.user_to.user_to.nickname}}
-                                </a>
-                            </div>
-                            <div class="dividing"></div>
-                            <div class="date">{{item.created_at}}</div>    
-                        </div>
-                        <div class="main">
-                            <div class="main-box">
-                                <div class="content-box">
-                                    <div class="title">{{item.title}}</div>
-                                    <div class="content">{{item.description}}</div>
-                                </div>
-                                <div class="img-box">
-                                    <img class="img" :src="item.image_url" alt="">
-                                </div>
-                            </div>
-                            <div class="icon-list">
-                                <div class="item">
-                                    <i class="iconfont icon-chakan"></i>
-                                    <div>{{item.pv_many_count}}</div>
-                                </div>
-                                <div class="item">
-                                    <i class="iconfont icon-dianzan"></i>
-                                    <div>{{item.like_many_count}}</div>
-                                </div>
-                                <div class="item">
-                                    <i class="iconfont icon-pinglun"></i>
-                                    <div>{{item.comment_many_count}}</div>
-                                </div>
-                            </div>
-                        </div>
+          <div
+            class="box">
+            <div class="list">
+              <div
+                v-for="(item, index) in articleList"
+                class="list-item"
+                :key="index"
+              >
+                <div class="meta">
+                  <div class="meta-container">
+                    <div class="user-message">
+                      <a class="userbox">{{ item.user_to.user_to.nickname }}</a>
                     </div>
-                    
+                    <div class="dividing"></div>
+                    <div class="date">{{ item.created_at }}</div>
+                  </div>
+                  <div class="main">
+                    <div class="main-box">
+                      <div class="content-box">
+                        <div class="title">{{ item.title }}</div>
+                        <div class="content">
+                          {{ item.description }}
+                        </div>
+                      </div>
+                      <div class="img-box">
+                        <img class="img" :src="item.image_url" alt="" />
+                      </div>
+                    </div>
+                    <div class="icon-list">
+                      <div class="item">
+                        <i class="iconfont icon-chakan"></i>
+                        <div>{{ item.pv_many_count }}</div>
+                      </div>
+                      <div class="item">
+                        <i class="iconfont icon-31dianzan"></i>
+                        <div>{{ item.like_many_count }}</div>
+                      </div>
+                      <div class="item">
+                        <i class="iconfont icon-pinglun"></i>
+                        <div>{{ item.comment_many_count }}</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-            <p v-if="loading" style="margin:10px auto;text-align: center;" class="loading">
-            <span></span> 
-            </p>
-            <p v-if="noMore" style="margin:10px auto;text-align: center;font-size:13px;color:#ccc">没有更多了</p>
+            <P
+              v-if="loading"
+              style="margin: 10pxauto; text-align: center"
+              class="loading"
+            >
+              <span></span>
+            </P>
+            <p v-if="noMore" style="margin:10px auto;text-align: center;font-size:13px;color:#ccc">没有更多了</P>
+          </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -79,81 +87,100 @@ export default {
         tyoe:Boolean,
         default:false
     },
-    id: {
-        type: Number,
-        default: 0
-    },
-    typeId:{
-        type: Number,
-        default: 0
-    }
+    // id: {
+    //     type: Number,
+    //     default: 0
+    // },
+    // typeId:{
+    //     type: Number,
+    //     default: 0
+    // }
   },
   data() {
     return {
+
     }
   },
   mounted(){
     window.addEventListener('scroll', this.onScroll)
   },
   methods: {
-    onScroll  () {
-        if(this.getScrollTop() + this.getWindowHeight() !== this.getScrollHeight()){
-　　　　        return
-　　        }
-        if(this.noMore || this.loading){
-            return
+    onScroll() {
+      if (
+        this.getScrollTop() + this.getWindowHeight() !==
+        this.getScrollHeight()
+      ) {
+        return;
+      }
+      if (this.noMore || this.loading) {
+        return;
+      }
+      this.loading = true;
+      this.page += 1;
+      this.$axios({
+        url: "/index/articleList",
+        params: {
+          page: this.page,
+          limit: this.limit,
+          id: this.id,
+          type_id: this.typeId,
+        },
+      }).then((resArticle) => {
+        if (resArticle.status === 20000) {
+          if (Math.ceil(resArticle.data.total / this.limit) <= this.page) {
+            this.noMore = true;
+          }
+          if (resArticle.data.list.length) {
+            this.articleList = [...this.articleList, ...resArticle.data.list];
+          }
         }
-        this.loading = true
-        this.page += 1 
-        this.$axios({url:'/index/articleList',params:{page:this.page,limit:this.limit,id:this.id,type_id:this.typeId}}).then(res=>{
-            if(res.status === 20000){
-                if(Math.ceil(res.data.total/this.limit) <= this.page){
-                    this.noMore = true
-                }
-                if(res.data.list.length){
-                    this.articleList = [
-                        ...this.articleList,
-                        ...res.data.list
-                    ] 
-                }
-            }
-            this.loading = false
-        })
+        this.loading = false;
+      });
     },
     //滚动条在Y轴上的滚动距离
-    getScrollTop(){
-    　　var scrollTop = 0, bodyScrollTop = 0, documentScrollTop = 0;
-    　　if(document.body){
-    　　　　bodyScrollTop = document.body.scrollTop;
-    　　}
-    　　if(document.documentElement){
-    　　　　documentScrollTop = document.documentElement.scrollTop;
-    　　}
-    　　scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;
-    　　return scrollTop;
+    getScrollTop() {
+      var scrollTop = 0,
+        bodyScrollTop = 0,
+        documentScrollTop = 0;
+      if (document.body) {
+        bodyScrollTop = document.body.scrollTop;
+      }
+      if (document.documentElement) {
+        documentScrollTop = document.documentElement.scrollTop;
+      }
+      scrollTop =
+        bodyScrollTop - documentScrollTop > 0
+          ? bodyScrollTop
+          : documentScrollTop;
+      return scrollTop;
     },
     //文档的总高度
-    getScrollHeight(){
-    　　var scrollHeight = 0, bodyScrollHeight = 0, documentScrollHeight = 0;
-    　　if(document.body){
-    　　　　bodyScrollHeight = document.body.scrollHeight;
-    　　}
-    　　if(document.documentElement){
-    　　　　documentScrollHeight = document.documentElement.scrollHeight;
-    　　}
-    　　scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;
-    　　return scrollHeight;
+    getScrollHeight() {
+      var scrollHeight = 0,
+        bodyScrollHeight = 0,
+        documentScrollHeight = 0;
+      if (document.body) {
+        bodyScrollHeight = document.body.scrollHeight;
+      }
+      if (document.documentElement) {
+        documentScrollHeight = document.documentElement.scrollHeight;
+      }
+      scrollHeight =
+        bodyScrollHeight - documentScrollHeight > 0
+          ? bodyScrollHeight
+          : documentScrollHeight;
+      return scrollHeight;
     },
     //浏览器视口的高度
-    getWindowHeight(){
-    　　var windowHeight = 0;
-    　　if(document.compatMode == "CSS1Compat"){
-    　　　　windowHeight = document.documentElement.clientHeight;
-    　　}else{
-    　　　　windowHeight = document.body.clientHeight;
-    　　}
-    　　return windowHeight;
-    }
+    getWindowHeight() {
+      var windowHeight = 0;
+      if (document.compatMode == "CSS1Compat") {
+        windowHeight = document.documentElement.clientHeight;
+      } else {
+        windowHeight = document.body.clientHeight;
+      }
+      return windowHeight;
+    },
   }
 }
 </script>
