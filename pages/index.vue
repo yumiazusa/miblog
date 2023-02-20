@@ -83,5 +83,4 @@ export default {
 .banner-container {
   padding-top: 10px;
 }
-
 </style>

@@ -2,11 +2,11 @@
   <div class="container">
     <div class="container-header">
       <el-row>
-        <el-col :span="3"
+        <el-col :span="4"
           ><div class="grid-content bg-purple">
             <logo v-if="showLogo" :collapse="true" /></div
         ></el-col>
-        <el-col :span="18"
+        <el-col :span="16"
           ><div class="grid-content bg-purple-light nav-list">
             <el-menu
               :default-active="activeIndex"
@@ -24,8 +24,8 @@
             </el-menu>
           </div>
         </el-col>
-        <el-col :span="3">
-          <header-right/>
+        <el-col :span="4">
+          <header-right />
         </el-col>
       </el-row>
     </div>
@@ -52,9 +52,13 @@
         </el-col>
       </el-row>
     </div>
-    <div :style="{ height: tagItems.length?'105px':'60px'}"></div>
+    <div :style="{ height: tagItems.length ? '105px' : '60px' }"></div>
     <el-tooltip placement="top" content="回到顶部">
-            <back-to-top :visibility-height="300" :back-position="0" transition-name="fade" /> 
+      <back-to-top
+        :visibility-height="300"
+        :back-position="0"
+        transition-name="fade"
+      />
     </el-tooltip>
     <nuxt />
   </div>
@@ -119,13 +123,23 @@ export default {
         this.$router.push("/");
       } else {
         this.tagItems = [];
-        this.$router.push("/article?id=" + key + "&type_id=0");
+        this.$router.push("/article?id=" + key + "&type_id=0" + "&open=1");
       }
     },
     typeItem(type_id) {
-      this.$router.push(
-        "/article?id=" + this.$route.query.id + "&type_id=" + type_id
-      );
+      if (type_id == 0) {
+        this.$router.push(
+          "/article?id=" +
+            this.$route.query.id +
+            "&type_id=" +
+            type_id +
+            "&open=1"
+        );
+      } else {
+        this.$router.push(
+          "/article?id=" + this.$route.query.id + "&type_id=" + type_id
+        );
+      }
     },
   },
 };
